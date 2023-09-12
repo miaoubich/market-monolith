@@ -16,29 +16,57 @@ import lombok.RequiredArgsConstructor;
 public class CustomerService {
 
 	private final CustomerRepository customerRepository;
-	
+
 	public String createNewCustomer(CustomerDto customerDto) {
 		Customer newCustomer = new Customer();
 		BeanUtils.copyProperties(customerDto, newCustomer);
-		
+
 		customerRepository.save(newCustomer);
 		String result = "Customer successfuly added to the DB!";
-		
-		return result; 
+
+		return result;
 	}
 
 	public ResponseDto getOneCustomer(int custId) {
 		Customer customer = customerRepository.findById(custId).get();
 		ResponseDto responseDto = new ResponseDto();
-		
-		BeanUtils.copyProperties(customer, responseDto);
-		
+
+		if (customer != null)
+			BeanUtils.copyProperties(customer, responseDto);
+		return responseDto;
+
+	}
+
+	public List<Customer> getAllCustomer() {
+		List<Customer> customers = customerRepository.findAll();
+
+		return customers;
+	}
+
+	public ResponseDto editCustomer(Customer customer) {
+		Customer existCustomer = customerRepository.findById(customer.getId()).orElse(null);
+
+		if (existCustomer != null) {
+			existCustomer.setName(customer.getName());
+			existCustomer.setEmail(customer.getEmail());
+			existCustomer.setGender(customer.getGender());
+			existCustomer.setProducts(customer.getProducts());
+
+			customerRepository.save(existCustomer);
+		}
+		ResponseDto responseDto = new ResponseDto();
+		BeanUtils.copyProperties(existCustomer, responseDto);
+
 		return responseDto;
 	}
-	
-	public List<Customer> getAllCustomer(){
-		List<Customer> customers = customerRepository.findAll();
-		
-		return customers;
+
+	public String deleteCustomerById(int custId) {
+		Customer existCustomer = customerRepository.findById(custId).orElse(null);
+		String result = "Customer with id = " + custId + " doesn't exist!";
+		if (existCustomer != null) {
+			customerRepository.delete(existCustomer);
+			result = "Customer deleted successfuly!";
+		}
+		return result;
 	}
 }
