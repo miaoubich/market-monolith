@@ -1,6 +1,7 @@
 package org.korcula.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.korcula.dto.CustomerDto;
 import org.korcula.dto.ResponseDto;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -55,4 +57,10 @@ public class CustomerController {
 		String result = customerService.deleteCustomerById(custId);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
+	
+	@PatchMapping("/{custId}")
+	public ResponseEntity<ResponseDto> customUpdateCustomer(@PathVariable int custId, @RequestBody Map<Object, Object> fields){
+		ResponseDto customCustomer = customerService.customEditCustomer(custId, fields);
+		return new ResponseEntity<ResponseDto>(customCustomer, HttpStatus.OK);
+	} 
 }

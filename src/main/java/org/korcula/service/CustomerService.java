@@ -1,13 +1,18 @@
 package org.korcula.service;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import org.korcula.dto.CustomerDto;
 import org.korcula.dto.ResponseDto;
 import org.korcula.model.Customer;
 import org.korcula.repository.CustomerRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.util.ReflectionUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -68,5 +73,24 @@ public class CustomerService {
 			result = "Customer deleted successfuly!";
 		}
 		return result;
+	}
+
+	public ResponseDto customEditCustomer(int custId, Map<Object, Object> fields) {
+		Customer customer = customerRepository.findById(custId).get();
+
+		if (customer != null) {
+			fields.forEach((key, value) -> {
+				Field field = ReflectionUtils.findRequiredField(Customer.class, (String) key);
+				field.setAccessible(true);
+				ReflectionUtils.setField(field, customer, value);
+			});
+			customerRepository.save(customer);
+		} else
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer with id = " + custId + " not found!");
+
+		ResponseDto customerDto = new ResponseDto();
+		BeanUtils.copyProperties(customer, customerDto);
+		
+		return customerDto;
 	}
 }
