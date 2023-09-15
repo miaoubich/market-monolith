@@ -3,6 +3,7 @@ package org.korcula.service;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.korcula.dto.CustomerDto;
 import org.korcula.dto.ResponseDto;
@@ -71,11 +72,14 @@ public class CustomerService {
 		if (existCustomer != null) {
 			customerRepository.delete(existCustomer);
 			result = "Customer deleted successfuly!";
+			
+			return result;
 		}
-		return result;
+		else
+			throw new NoSuchElementException();
 	}
 
-	public ResponseDto customEditCustomer(int custId, Map<Object, Object> fields) {
+	public ResponseDto updateByField(int custId, Map<Object, Object> fields) {
 		Customer customer = customerRepository.findById(custId).get();
 
 		if (customer != null) {

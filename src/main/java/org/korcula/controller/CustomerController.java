@@ -59,8 +59,8 @@ public class CustomerController {
 	}
 	
 	@PatchMapping("/{custId}")
-	public ResponseEntity<ResponseDto> customUpdateCustomer(@PathVariable int custId, @RequestBody Map<Object, Object> fields){
-		ResponseDto customCustomer = customerService.customEditCustomer(custId, fields);
+	public ResponseEntity<ResponseDto> updateCustomerByField(@PathVariable int custId, @RequestBody Map<Object, Object> fields){
+		ResponseDto customCustomer = customerService.updateByField(custId, fields);
 		return new ResponseEntity<ResponseDto>(customCustomer, HttpStatus.OK);
 	} 
 }
