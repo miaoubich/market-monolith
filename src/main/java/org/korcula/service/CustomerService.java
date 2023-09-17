@@ -4,8 +4,10 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.korcula.dto.CustomerDto;
+import org.korcula.dto.ResponseCustomerDto;
 import org.korcula.dto.ResponseDto;
 import org.korcula.model.Customer;
 import org.korcula.repository.CustomerRepository;
@@ -53,7 +55,7 @@ public class CustomerService {
 		Customer existCustomer = customerRepository.findById(customer.getId()).orElse(null);
 
 		if (existCustomer != null) {
-			existCustomer.setName(customer.getName());
+			existCustomer.setCustomerName(customer.getCustomerName());
 			existCustomer.setEmail(customer.getEmail());
 			existCustomer.setGender(customer.getGender());
 			existCustomer.setProducts(customer.getProducts());
@@ -96,5 +98,9 @@ public class CustomerService {
 		BeanUtils.copyProperties(customer, customerDto);
 		
 		return customerDto;
+	}
+
+	public Map<String, List<ResponseCustomerDto>> getCustomerInfo() {
+		return customerRepository.getCustomerNameAndProductName().stream().collect(Collectors.groupingBy(ResponseCustomerDto::getCustomerName));
 	}
 }

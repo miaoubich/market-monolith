@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseDto {
 
-	private String name;
+	private String customerName;
 	private String email;
 	private String gender;
 	private List<Product> products;

@@ -19,7 +19,4 @@ public class Product {
 	private String productName;
 	private int quantity;
 	private double price;
-//	@ManyToOne
-//	@JoinColumn(name = "customer_id", referencedColumnName = "id")
-//	private Customer customer;
 }

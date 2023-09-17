@@ -2,8 +2,10 @@ package org.korcula.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.korcula.dto.CustomerDto;
+import org.korcula.dto.ResponseCustomerDto;
 import org.korcula.dto.ResponseDto;
 import org.korcula.model.Customer;
 import org.korcula.service.CustomerService;
@@ -63,4 +65,10 @@ public class CustomerController {
 		ResponseDto customCustomer = customerService.updateByField(custId, fields);
 		return new ResponseEntity<ResponseDto>(customCustomer, HttpStatus.OK);
 	} 
+	
+	@GetMapping("/getcutprod")
+	public ResponseEntity<?> customerNameAndProductName(){
+		Map<String, List<ResponseCustomerDto>> response = customerService.getCustomerInfo();
+		return new ResponseEntity<>(response, HttpStatus.FOUND);
+	}
 }
